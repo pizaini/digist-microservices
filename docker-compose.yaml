@@ -1,0 +1,127 @@
+version: "3.8"
+services:
+  redis:
+    build: ./docker/redis/
+    container_name: redis
+    command: []
+    ports:
+    - "6379:6379"
+    volumes:
+    - type: bind
+      source: /home/pizaini/docker-volume/redis/data
+      target: /data
+  postgres:
+    image: postgres:13.0
+    container_name: postgres
+    command: []
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: rahasia
+      POSTGRES_DB: digist-student
+    volumes:
+    - type: bind
+      source: /home/pizaini/docker-volume/postgresql
+      target: /var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:4.28
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: zheiner.taurus@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: rahasia
+    ports:
+      - "8080:80"
+    volumes:
+      - type: bind
+        source: /home/pizaini/docker-volume/pgadmin
+        target: /var/lib/pgadmin
+  digist-student:
+    build: ./docker/php-apache/
+    container_name: digist-student
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: digist-student
+      DB_USER: postgres
+      DB_PASSWORD: rahasia
+    volumes:
+      - type: bind
+        source: ./source/digist-student
+        target: /var/www/html
+    ports:
+      - "8081:80"
+  digist-teacher:
+    build: ./docker/php-apache/
+    container_name: digist-teacher
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: digist-teacher
+      DB_USER: postgres
+      DB_PASSWORD: rahasia
+    volumes:
+      - type: bind
+        source: ./source/digist-teacher
+        target: /var/www/html
+    ports:
+      - "8082:80"
+  digist-class:
+    build: ./docker/php-apache/
+    container_name: digist-class
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: digist-class
+      DB_USER: postgres
+      DB_PASSWORD: rahasia
+    volumes:
+      - type: bind
+        source: ./source/digist-class
+        target: /var/www/html
+    ports:
+      - "8083:80"
+  digist-course:
+    build: ./docker/php-apache/
+    container_name: digist-course
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: digist-course
+      DB_USER: postgres
+      DB_PASSWORD: rahasia
+    volumes:
+      - type: bind
+        source: ./source/digist-course
+        target: /var/www/html
+    ports:
+      - "8084:80"
+  digist-grade:
+    build: ./docker/php-apache/
+    container_name: digist-grade
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: digist-grade
+      DB_USER: postgres
+      DB_PASSWORD: rahasia
+    volumes:
+      - type: bind
+        source: ./source/digist-grade
+        target: /var/www/html
+    ports:
+      - "8085:80"
